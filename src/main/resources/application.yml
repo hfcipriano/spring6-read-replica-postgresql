@@ -1,0 +1,31 @@
+spring:
+  application.name: spring6-read-replica-postgresql
+  primary:
+    datasource:
+      password: postgres_write
+      username: postgres_write
+      driverClassName: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/my_database
+      hikari:
+        auto-commit: false
+        pool-name: primaryHikariPool
+        data-source-properties:
+          ApplicationName: spring6-master-app
+  replica:
+    datasource:
+      password: repl_password
+      username: repl_user
+      driverClassName: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:15432/my_database
+      hikari:
+        auto-commit: false
+        poolName: replicaHikariPool
+        readOnly: true # Protecão nivel JDBC, nao tem relacao com o @Transactional(readOnly=true), que é usado para determinar o DataSource em runtime
+        data-source-properties:
+          ApplicationName: spring6-replica-app
+  ################ Database #####################
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update # WARNING: Use this prop just in DEV environment
